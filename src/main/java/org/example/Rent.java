@@ -1,23 +1,36 @@
 package org.example;
 
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 import org.example.vms.VirtualMachine;
 import java.time.Duration;
 
+@Entity
 public class Rent {
 
-    private final int rentId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int rentId;
 
-    private final LocalDateTime beginTime;
+    private LocalDateTime beginTime;
     private LocalDateTime endTime;
 
     private double rentCost;
 
     private boolean isArchive;
 
-    private final Client client;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ClientId")
+    private Client client;
 
-    private final VirtualMachine VM;
+    @ManyToOne(fetch = FetchType.LAZY)  // Many rents can be associated with one VM
+    @JoinColumn(name = "VmId")
+    private VirtualMachine VM;
+
+    public Rent() {
+
+    }
 
 
     public LocalDateTime getBeginTime() {

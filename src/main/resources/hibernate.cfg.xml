@@ -32,6 +32,11 @@
 
         <!-- List of annotated classes -->
         <mapping class="org.example.Client"/>
+        <mapping class="org.example.vms.VirtualMachine"/>
+        <mapping class="org.example.vms.Normal"/>
+        <mapping class="org.example.vms.Performance"/>
+        <mapping class="org.example.vms.Pro_oVirt"/>
+
     </session-factory>
 
 </hibernate-configuration>

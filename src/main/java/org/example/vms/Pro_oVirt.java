@@ -1,13 +1,22 @@
 package org.example.vms;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+
+@Entity
+@DiscriminatorValue("Pro_oVirt")
 public class Pro_oVirt extends VirtualMachine {
 
-    private final boolean NUMA_architecture;
+    private boolean NUMA_architecture;
     private int NUMA_nodes;
     public Pro_oVirt(int id, boolean isAvailable, int CPUCores, double RAM, double storageSpace,
                      int NUMA_nodes) {
         super(id, isAvailable, CPUCores, RAM, storageSpace);
         this.NUMA_architecture = true;
+    }
+
+    public Pro_oVirt() {
+
     }
 
     public boolean isNUMA_architecture() {

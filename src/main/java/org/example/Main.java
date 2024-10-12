@@ -9,12 +9,13 @@ import org.example.vms.*;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
-    //    ClientDAO clientDAO = new ClientDAO();
+        ClientDAO clientDAO = new ClientDAO();
         VirtualMachineDAO vmDAO = new VirtualMachineDAO();
 
-        /*
+
         // CREATE - zapis nowego klienta
         Client client = new Client(1, "John", "Doe");
         clientDAO.saveClient(client);
@@ -30,7 +31,7 @@ public class Main {
         // DELETE - usunięcie klienta
         clientDAO.deleteClient(retrievedClient.getPersonalId());
 
-*/
+
 
         // ************** NORMAL VM TEST **************
 

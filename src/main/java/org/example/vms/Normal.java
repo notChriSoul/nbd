@@ -8,11 +8,10 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("Normal")
 public class Normal extends VirtualMachine {
 
-    private boolean SSDSATAStorage;
+    private boolean SSDSATAStorage = true;
 
     public Normal(int id, boolean isAvailable, int CPUCores, double RAM, double storageSpace) {
         super(id, isAvailable, CPUCores, RAM, storageSpace);
-        boolean SSDSATAStorage = true;
     }
 
     public Normal() {

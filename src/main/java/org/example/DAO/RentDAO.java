@@ -1,29 +1,34 @@
 package org.example.DAO;
 
+import jakarta.persistence.Query;
 import org.example.Rent;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import javax.persistence.OptimisticLockException;
-
+import java.util.List;
 
 
 public class RentDAO {
-
     private static SessionFactory sessionFactory;
 
     static {
         sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     }
 
-    // Method to save Rent (no optimistic locking issue during save)
     public void saveRent(Rent rent) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.save(rent);  // Saving a new resource won't trigger OptimisticLockException
+            session.save(rent);
             transaction.commit();
+        } catch (OptimisticLockException ole) {
+            // Handle optimistic locking exception
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw ole; // Rethrow for further handling
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -32,19 +37,23 @@ public class RentDAO {
         }
     }
 
-    // Method to update Rent with optimistic locking
+    public Rent getRent(int rentId) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Rent.class, rentId);
+        }
+    }
+
     public void updateRent(Rent rent) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.update(rent);  // Hibernate will check version field here
+            session.update(rent);
             transaction.commit();
         } catch (OptimisticLockException ole) {
-            System.out.println("Optimistic lock exception during update: Another transaction has modified the Rent entity!");
             if (transaction != null) {
                 transaction.rollback();
             }
-            ole.printStackTrace();
+            throw ole; // Rethrow for further handling
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -53,20 +62,20 @@ public class RentDAO {
         }
     }
 
-    // Method to delete Rent with optimistic locking
-    public void deleteRent(int id) {
+    public void deleteRent(int rentId) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Rent rent = session.get(Rent.class, id);
-            session.delete(rent);  // Hibernate will check version field during delete
-            transaction.commit();
+            Rent rent = session.get(Rent.class, rentId);
+            if (rent != null) {
+                session.delete(rent);
+                transaction.commit();
+            }
         } catch (OptimisticLockException ole) {
-            System.out.println("Optimistic lock exception during delete: Another transaction has modified the Rent entity!");
             if (transaction != null) {
                 transaction.rollback();
             }
-            ole.printStackTrace();
+            throw ole; // Rethrow for further handling
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -75,10 +84,11 @@ public class RentDAO {
         }
     }
 
-    // Method to get Rent by id
-    public Rent getRent(int rentId) {
+    public List<Rent> getActiveRentsByClient(int clientId) {
         try (Session session = sessionFactory.openSession()) {
-            return session.get(Rent.class, rentId);
+            return session.createQuery("FROM Rent r WHERE r.client.id = :clientId AND r.isArchive = false", Rent.class)
+                    .setParameter("clientId", clientId)
+                    .getResultList();
         }
     }
 }

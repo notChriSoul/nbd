@@ -28,10 +28,21 @@ public class Rent {
     @JoinColumn(name = "VmId")
     private VirtualMachine VM;
 
+    // Optimistic locking version
+    @Version
+    private int version;
+
     public Rent() {
 
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public LocalDateTime getBeginTime() {
         return beginTime;
@@ -81,6 +92,10 @@ public class Rent {
         this.client = client;
         this.VM = VM;
         this.isArchive = false;
+    }
+
+    public void setBeginTime(LocalDateTime beginTime) {
+        this.beginTime = beginTime;
     }
 
     public void setRentCost(double rentCost) {

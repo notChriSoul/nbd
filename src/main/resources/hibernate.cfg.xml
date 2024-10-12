@@ -36,6 +36,7 @@
         <mapping class="org.example.vms.Normal"/>
         <mapping class="org.example.vms.Performance"/>
         <mapping class="org.example.vms.Pro_oVirt"/>
+        <mapping class="org.example.Rent"/>
 
     </session-factory>
 

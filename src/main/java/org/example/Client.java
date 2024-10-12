@@ -1,9 +1,6 @@
 package org.example;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Client {
@@ -13,6 +10,9 @@ public class Client {
     private String firstName;
     private String lastName;
 
+    @Version
+    public int version;
+
 
     public Client(int personalId, String firstName, String lastName) {
         PersonalId = personalId;
@@ -20,13 +20,17 @@ public class Client {
         this.lastName = lastName;
     }
 
-    // why?
-    // it doesn't let me do it paremeterless as long as id is "final"
     public Client() {
 
     }
 
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
+    public int getVersion() {
+        return version;
+    }
 
     public int getPersonalId() {
         return PersonalId;

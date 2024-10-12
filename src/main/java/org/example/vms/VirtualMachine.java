@@ -17,6 +17,9 @@ public abstract class VirtualMachine
     private double RAM;
     private double StorageSpace;
 
+    // Optimistic locking version field
+    @Version
+    private int version;
 
     public VirtualMachine(int id, boolean isAvailable, int CPUCores, double RAM, double storageSpace) {
         this.id = id;
@@ -28,6 +31,14 @@ public abstract class VirtualMachine
 
     public VirtualMachine() {
 
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public void setAvailable(boolean available) {

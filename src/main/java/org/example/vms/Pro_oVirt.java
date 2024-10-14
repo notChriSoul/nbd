@@ -2,12 +2,16 @@ package org.example.vms;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @DiscriminatorValue("Pro_oVirt")
+@NoArgsConstructor
 public class Pro_oVirt extends VirtualMachine {
 
-    private boolean NUMA_architecture = true;
+    private final boolean NUMA_architecture = true;
 
     private int NUMA_nodes;
 
@@ -15,18 +19,6 @@ public class Pro_oVirt extends VirtualMachine {
                      int NUMA_nodes) {
         super(id, isAvailable, CPUCores, RAM, storageSpace);
         this.NUMA_nodes = NUMA_nodes;
-    }
-
-    public Pro_oVirt() {
-
-    }
-
-    public boolean isNUMA_architecture() {
-        return NUMA_architecture;
-    }
-
-    public int getNUMA_nodes() {
-        return NUMA_nodes;
     }
 
     @Override

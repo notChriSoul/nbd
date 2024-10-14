@@ -1,7 +1,15 @@
 package org.example;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.example.DAO.ClientDAO;
 import org.example.DAO.RentDAO;
+import org.example.DAO.VirtualMachineDAO;
+import org.example.exceptions.MaxRentLimitException;
+import org.example.managers.RentManager;
+import org.example.vms.Normal;
+import org.example.vms.Performance;
+import org.example.vms.Pro_oVirt;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -11,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -65,5 +74,32 @@ public class RentTest {
 
         // Clean up
         session2.close();
+    }
+
+    @Test
+    public void testMaxRent() {
+        ClientDAO clientDAO = new ClientDAO();
+        VirtualMachineDAO vmDAO = new VirtualMachineDAO();
+
+
+        // CREATE - zapis nowego klienta
+        Client client = new Client(1, "John", "Doe");
+        clientDAO.saveClient(client);
+
+        Normal normalVM = new Normal(1, true, 4, 16.0, 500.0);
+        vmDAO.saveVirtualMachine(normalVM);
+
+        Performance performanceVM = new Performance(2, true, 8, 32.0, 1000.0, "NVIDIA RTX 3080");
+        vmDAO.saveVirtualMachine(performanceVM);
+
+        Pro_oVirt proOVirtVM = new Pro_oVirt(3, true, 16, 128.0, 2000.0, 4);
+        vmDAO.saveVirtualMachine(proOVirtVM);
+
+
+        RentManager rm = new RentManager();
+        rm.createRent(LocalDateTime.now(), client, normalVM);
+        rm.createRent(LocalDateTime.now(), client, performanceVM);
+        assertThrows(MaxRentLimitException.class, () -> rm.createRent(LocalDateTime.now(), client, proOVirtVM));
+
     }
 }

@@ -2,22 +2,32 @@ package org.example.vms;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "vm_type", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor
 public abstract class VirtualMachine
 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Setter
     private boolean isAvailable;
+    @Setter
     private int CPUCores;
+    @Setter
     private double RAM;
+    @Setter
     private double StorageSpace;
 
     // Optimistic locking version field
+    @Setter
     @Version
     private int version;
 
@@ -29,55 +39,7 @@ public abstract class VirtualMachine
         StorageSpace = storageSpace;
     }
 
-    public VirtualMachine() {
-
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public void setCPUCores(int CPUCores) {
-        this.CPUCores = CPUCores;
-    }
-
-    public void setRAM(double RAM) {
-        this.RAM = RAM;
-    }
-
-    public void setStorageSpace(double storageSpace) {
-        StorageSpace = storageSpace;
-    }
-
     public abstract double calculateRentalPrice();
-    public int getId() {
-        return id;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public int getCPUCores() {
-        return CPUCores;
-    }
-
-    public double getRAM() {
-        return RAM;
-    }
-
-    public double getStorageSpace() {
-        return StorageSpace;
-    }
-
 
 }
 

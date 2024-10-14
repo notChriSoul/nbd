@@ -49,6 +49,13 @@
             <version>0.10.1</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- JUnit for testing (optional) -->
         <dependency>
             <groupId>junit</groupId>

@@ -1,18 +1,25 @@
 package org.example;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
 @Entity
+@NoArgsConstructor
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int PersonalId;
+    @Setter
     private String firstName;
+    @Setter
     private String lastName;
 
+    @Setter
     @Version
     public int version;
-
 
     public Client(int personalId, String firstName, String lastName) {
         PersonalId = personalId;
@@ -20,35 +27,4 @@ public class Client {
         this.lastName = lastName;
     }
 
-    public Client() {
-
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public int getPersonalId() {
-        return PersonalId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 }

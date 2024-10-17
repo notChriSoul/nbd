@@ -6,6 +6,7 @@ import org.example.Rent;
 import org.example.exceptions.MaxRentLimitException;
 import org.example.vms.Normal;
 import org.example.vms.VirtualMachine;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,13 +27,25 @@ class RentManagerTest {
         rentManager = new RentManager();
         ClientManager CM = new ClientManager();
         VirtualMachineDAO vmdao = new VirtualMachineDAO();
-        CM.createClient("Ben","Dover");
-        client = CM.getClient(2);
+        client = CM.getClient(CM.createClient("Ben","Dover"));
         vm = new Normal(1, true, 4, 16.0, 500.0);
         vmdao.saveVirtualMachine(vm);
         // Add an initial rent to the client (1 rent already exists)
         rentManager.createRent(LocalDateTime.now().minusDays(1), client, vm);
     }
+
+//    @AfterEach
+//    void rmrf() {
+//        rentManager = new RentManager();
+//        ClientManager CM = new ClientManager();
+//        VirtualMachineDAO vmdao = new VirtualMachineDAO();
+//        CM.createClient("Ben","Dover");
+//        client = CM.getClient(1);
+//        vm = new Normal(1, true, 4, 16.0, 500.0);
+//        vmdao.saveVirtualMachine(vm);
+//        // Add an initial rent to the client (1 rent already exists)
+//        rentManager.createRent(LocalDateTime.now().minusDays(1), client, vm);
+//    }
 
     @Test
     void testConcurrentRentCreation() throws InterruptedException, ExecutionException {

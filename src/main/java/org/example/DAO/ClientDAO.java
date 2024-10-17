@@ -25,10 +25,11 @@ public class ClientDAO {
             session.save(client);
             transaction.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+
         }
     }
 

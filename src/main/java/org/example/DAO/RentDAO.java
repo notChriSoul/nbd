@@ -1,11 +1,15 @@
 package org.example.DAO;
 
 import jakarta.persistence.Query;
+import org.example.Client;
 import org.example.Rent;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import java.util.List;
 
@@ -21,7 +25,8 @@ public class RentDAO {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.save(rent);
+            session.get(Client.class, rent.getClient().getPersonalId(), LockMode.OPTIMISTIC_FORCE_INCREMENT);
+            session.persist(rent);
             transaction.commit();
         } catch (OptimisticLockException ole) {
             // Handle optimistic locking exception

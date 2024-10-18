@@ -35,10 +35,10 @@ public class RentDAO {
             }
             throw ole; // Rethrow for further handling
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
@@ -60,10 +60,10 @@ public class RentDAO {
             }
             throw ole; // Rethrow for further handling
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
@@ -82,10 +82,10 @@ public class RentDAO {
             }
             throw ole; // Rethrow for further handling
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 

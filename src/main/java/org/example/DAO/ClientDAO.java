@@ -29,7 +29,6 @@ public class ClientDAO {
             if (transaction != null) {
                 transaction.rollback();
             }
-
         }
     }
 
@@ -54,10 +53,10 @@ public class ClientDAO {
             }
             ole.printStackTrace();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
@@ -78,10 +77,10 @@ public class ClientDAO {
             }
             ole.printStackTrace();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 }

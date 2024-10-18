@@ -34,15 +34,25 @@ public class RentTest {
 
     @Test
     public void testOptimisticLocking() {
+        ClientDAO clientDAO = new ClientDAO();
+        VirtualMachineDAO vmDAO = new VirtualMachineDAO();
+
+
+        // CREATE - zapis nowego klienta
+        Client client = new Client(1, "John", "Doe");
+        clientDAO.saveClient(client);
+
+        Normal normalVM = new Normal(1, true, 4, 16.0, 500.0);
+        vmDAO.saveVirtualMachine(normalVM);
+
+
+
         // Create RentDAO and set up initial Rent object
         RentDAO rentDAO = new RentDAO();
 
         // Create a new Rent and save it
-        Rent rent = new Rent();
-        rent.setBeginTime(LocalDateTime.now());
-        rent.setEndTime(LocalDateTime.now().plusDays(2));
-        rent.setRentCost(100.0);
-        rent.setArchive(false);
+        Rent rent = new Rent(0, LocalDateTime.now(), client, normalVM);
+
         rentDAO.saveRent(rent);
 
         // Simulate two sessions (two different users/transactions trying to update the same Rent)

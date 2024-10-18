@@ -25,10 +25,10 @@ public class VirtualMachineDAO {
             session.save(vm);
             transaction.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
@@ -53,10 +53,10 @@ public class VirtualMachineDAO {
             }
             ole.printStackTrace();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 
@@ -75,10 +75,10 @@ public class VirtualMachineDAO {
             }
             ole.printStackTrace();
         } catch (Exception e) {
+            e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
         }
     }
 }

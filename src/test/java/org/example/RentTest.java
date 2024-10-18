@@ -1,7 +1,5 @@
 package org.example;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.example.DAO.ClientDAO;
 import org.example.DAO.RentDAO;
 import org.example.DAO.VirtualMachineDAO;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.persistence.OptimisticLockException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -40,10 +37,10 @@ public class RentTest {
 
         // CREATE - zapis nowego klienta
         Client client = new Client(1, "John", "Doe");
-        clientDAO.saveClient(client);
+        clientDAO.save(client);
 
         Normal normalVM = new Normal(1, true, 4, 16.0, 500.0);
-        vmDAO.saveVirtualMachine(normalVM);
+        vmDAO.save(normalVM);
 
 
 
@@ -53,7 +50,7 @@ public class RentTest {
         // Create a new Rent and save it
         Rent rent = new Rent(0, LocalDateTime.now(), client, normalVM);
 
-        rentDAO.saveRent(rent);
+        rentDAO.save(rent);
 
         // Simulate two sessions (two different users/transactions trying to update the same Rent)
 
@@ -94,16 +91,16 @@ public class RentTest {
 
         // CREATE - zapis nowego klienta
         Client client = new Client(1, "John", "Doe");
-        clientDAO.saveClient(client);
+        clientDAO.save(client);
 
         Normal normalVM = new Normal(1, true, 4, 16.0, 500.0);
-        vmDAO.saveVirtualMachine(normalVM);
+        vmDAO.save(normalVM);
 
         Performance performanceVM = new Performance(2, true, 8, 32.0, 1000.0, "NVIDIA RTX 3080");
-        vmDAO.saveVirtualMachine(performanceVM);
+        vmDAO.save(performanceVM);
 
         Pro_oVirt proOVirtVM = new Pro_oVirt(3, true, 16, 128.0, 2000.0, 4);
-        vmDAO.saveVirtualMachine(proOVirtVM);
+        vmDAO.save(proOVirtVM);
 
 
         RentManager rm = new RentManager();

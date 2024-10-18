@@ -8,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.OptimisticLockException;
 
-public class VirtualMachineDAO {
+public class VirtualMachineDAO implements DAO<VirtualMachine> {
 
     private static SessionFactory sessionFactory;
 
@@ -18,7 +18,7 @@ public class VirtualMachineDAO {
     }
 
     // CREATE - Save new VirtualMachine
-    public void saveVirtualMachine(VirtualMachine vm) {
+    public void save(VirtualMachine vm) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -33,14 +33,14 @@ public class VirtualMachineDAO {
     }
 
     // READ - Get VirtualMachine by ID
-    public VirtualMachine getVirtualMachine(int id) {
+    public VirtualMachine get(int id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(VirtualMachine.class, id);
         }
     }
 
     // UPDATE - Update VirtualMachine with optimistic locking
-    public void updateVirtualMachine(VirtualMachine vm) {
+    public void update(VirtualMachine vm) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -61,7 +61,7 @@ public class VirtualMachineDAO {
     }
 
     // DELETE - Delete VirtualMachine with optimistic locking
-    public void deleteVirtualMachine(int id) {
+    public void delete(int id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

@@ -8,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.OptimisticLockException;
 
-public class ClientDAO {
+public class ClientDAO implements DAO<Client> {
 
     private static SessionFactory sessionFactory;
 
@@ -18,7 +18,7 @@ public class ClientDAO {
     }
 
     // CREATE - Save new client
-    public void saveClient(Client client) {
+    public void save(Client client) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -33,14 +33,14 @@ public class ClientDAO {
     }
 
     // READ - Get client by ID
-    public Client getClient(int id) {
+    public Client get(int id) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Client.class, id);
         }
     }
 
     // UPDATE - Update client with optimistic locking
-    public void updateClient(Client client) {
+    public void update(Client client) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -63,7 +63,7 @@ public class ClientDAO {
 
 
     // DELETE - Delete client with optimistic locking
-    public void deleteClient(int id) {
+    public void delete(int id) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

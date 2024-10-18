@@ -1,6 +1,5 @@
 package org.example.DAO;
 
-import jakarta.persistence.Query;
 import org.example.Client;
 import org.example.Rent;
 import org.hibernate.LockMode;
@@ -9,19 +8,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import java.util.List;
 
 
-public class RentDAO {
+public class RentDAO implements DAO<Rent> {
     private static SessionFactory sessionFactory;
 
     static {
         sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     }
 
-    public void saveRent(Rent rent) {
+    public void save(Rent rent) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -42,13 +40,13 @@ public class RentDAO {
         }
     }
 
-    public Rent getRent(int rentId) {
+    public Rent get(int rentId) {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Rent.class, rentId);
         }
     }
 
-    public void updateRent(Rent rent) {
+    public void update(Rent rent) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -67,7 +65,7 @@ public class RentDAO {
         }
     }
 
-    public void deleteRent(int rentId) {
+    public void delete(int rentId) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

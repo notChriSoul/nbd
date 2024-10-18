@@ -27,7 +27,7 @@ public class RentManager {
 
         // Create and save the Rent
         Rent rent = new Rent(0, beginTime, client, vm); // Using the constructor with rentId set to 0 for new entities
-        rentDAO.saveRent(rent); // Assuming saveRent method is implemented in RentDAO
+        rentDAO.save(rent); // Assuming saveRent method is implemented in RentDAO
 
         return rent;
     }
@@ -40,13 +40,13 @@ public class RentManager {
 
     // Method to retrieve a Rent by ID
     public Rent getRent(int rentId) {
-        return rentDAO.getRent(rentId);
+        return rentDAO.get(rentId);
     }
 
     // Method to update an existing Rent
     public void updateRent(Rent rent) {
         try {
-            rentDAO.updateRent(rent);
+            rentDAO.update(rent);
         } catch (OptimisticLockException ole) {
             System.out.println("OptimisticLockException during update: Another transaction has updated this rent.");
             ole.printStackTrace();
@@ -56,7 +56,7 @@ public class RentManager {
     // Method to delete a Rent by ID
     public void deleteRent(int rentId) {
         try {
-            rentDAO.deleteRent(rentId);
+            rentDAO.delete(rentId);
         } catch (OptimisticLockException ole) {
             System.out.println("OptimisticLockException during delete: Another transaction has updated this rent.");
             ole.printStackTrace();

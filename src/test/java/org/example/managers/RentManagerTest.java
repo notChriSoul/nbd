@@ -5,6 +5,7 @@ import org.example.DAO.VirtualMachineDAO;
 import org.example.Rent;
 import org.example.exceptions.MaxRentLimitException;
 import org.example.vms.Normal;
+import org.example.vms.Performance;
 import org.example.vms.VirtualMachine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RentManagerTest {
 
     private RentManager rentManager;
-    private Client client;
-    private VirtualMachine vm;
+    private int clientId;
 
     @BeforeEach
     void setUp() {
@@ -26,34 +26,31 @@ class RentManagerTest {
         rentManager = new RentManager();
         ClientManager CM = new ClientManager();
         VirtualMachineDAO vmdao = new VirtualMachineDAO();
-        client = CM.getClient(CM.createClient("Ben","Dover"));
-        vm = new Normal(1, true, 4, 16.0, 500.0);
+        clientId = CM.createClient("Ben","Dover");
+        VirtualMachine vm = new Normal(1, true, 4, 16.0, 500.0);
         vmdao.save(vm);
         // Add an initial rent to the client (1 rent already exists)
-        rentManager.createRent(LocalDateTime.now().minusDays(1), client, vm);
+        rentManager.createRent(LocalDateTime.now().minusDays(1), CM.getClient(clientId), vm);
     }
-
-//    @AfterEach
-//    void rmrf() {
-//        rentManager = new RentManager();
-//        ClientManager CM = new ClientManager();
-//        VirtualMachineDAO vmdao = new VirtualMachineDAO();
-//        CM.createClient("Ben","Dover");
-//        client = CM.getClient(1);
-//        vm = new Normal(1, true, 4, 16.0, 500.0);
-//        vmdao.saveVirtualMachine(vm);
-//        // Add an initial rent to the client (1 rent already exists)
-//        rentManager.createRent(LocalDateTime.now().minusDays(1), client, vm);
-//    }
 
     @Test
     void testConcurrentRentCreation() throws InterruptedException, ExecutionException {
+        ClientManager CM = new ClientManager();
+        Client client = CM.getClient(clientId);
+
+        VirtualMachineDAO vmdao = new VirtualMachineDAO();
+        Normal normalVM = new Normal(1, true, 4, 16.0, 500.0);
+        vmdao.save(normalVM);
+
+        Performance performanceVM = new Performance(2, true, 8, 32.0, 1000.0, "NVIDIA RTX 3080");
+        vmdao.save(performanceVM);
+
         // Create a thread pool to simulate concurrent rent creation
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         // Define two concurrent tasks that attempt to create a new rent for the same client
-        Callable<Rent> rentTask1 = () -> rentManager.createRent(LocalDateTime.now(), client, vm);
-        Callable<Rent> rentTask2 = () -> rentManager.createRent(LocalDateTime.now(), client, vm);
+        Callable<Rent> rentTask1 = () -> rentManager.createRent(LocalDateTime.now(), client, normalVM);
+        Callable<Rent> rentTask2 = () -> rentManager.createRent(LocalDateTime.now(), client, performanceVM);
 
         // Submit the tasks to the executor service
         Future<Rent> future1 = executorService.submit(rentTask1);

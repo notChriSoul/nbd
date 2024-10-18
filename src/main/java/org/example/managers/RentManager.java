@@ -3,7 +3,6 @@ package org.example.managers;
 import jakarta.persistence.OptimisticLockException;
 import org.example.Client;
 import org.example.DAO.RentDAO;
-import org.example.exceptions.MaxRentLimitException;
 import org.example.Rent;
 import org.example.vms.VirtualMachine;
 
@@ -20,11 +19,6 @@ public class RentManager {
 
     // Method to create a new Rent using the constructor
     public Rent createRent(LocalDateTime beginTime, Client client, VirtualMachine vm) {
-        // Check if the client already has 2 active rents
-        if (hasMaxActiveRents(client)) {
-            throw new MaxRentLimitException("Client cannot have more than 2 active rents at the same time.");
-        }
-
         // Create and save the Rent
         Rent rent = new Rent(0, beginTime, client, vm); // Using the constructor with rentId set to 0 for new entities
         rentDAO.save(rent); // Assuming saveRent method is implemented in RentDAO

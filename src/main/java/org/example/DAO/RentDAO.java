@@ -2,6 +2,7 @@ package org.example.DAO;
 
 import org.example.Client;
 import org.example.Rent;
+import org.example.exceptions.MaxRentLimitException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,6 +25,13 @@ public class RentDAO implements DAO<Rent> {
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.get(Client.class, rent.getClient().getPersonalId(), LockMode.OPTIMISTIC_FORCE_INCREMENT);
+
+            int numberOfRents = session.createQuery("FROM Rent r WHERE r.client.id = :clientId AND r.isArchive = false", Rent.class)
+                    .setParameter("clientId", rent.getClient().getPersonalId())
+                    .getResultList().size();
+            if (numberOfRents >= 2) {
+                throw new MaxRentLimitException("Client cannot have more than 2 active rents at the same time.");
+            }
             session.persist(rent);
             transaction.commit();
         } catch (OptimisticLockException ole) {
@@ -32,6 +40,8 @@ public class RentDAO implements DAO<Rent> {
                 transaction.rollback();
             }
             throw ole; // Rethrow for further handling
+        } catch (MaxRentLimitException mrle) {
+            throw new MaxRentLimitException("Client cannot have more than 2 active rents at the same time.");
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {

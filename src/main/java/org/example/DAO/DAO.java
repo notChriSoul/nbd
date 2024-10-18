@@ -1,13 +1,5 @@
 package org.example.DAO;
 
-import org.example.Client;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-
-import javax.persistence.OptimisticLockException;
-
 public interface DAO<T> {
 
         // CREATE - Save new client

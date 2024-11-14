@@ -2,6 +2,7 @@ package org.example.vms;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
@@ -15,6 +16,7 @@ public class Performance extends VirtualMachine {
     @BsonProperty("nvmestorage")
     private final boolean NVMeStorage = true;
 
+    @BsonCreator
     public Performance(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
                        @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                        @BsonProperty("storageSpace") double storageSpace,

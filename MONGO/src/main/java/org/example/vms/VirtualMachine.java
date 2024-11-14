@@ -4,6 +4,7 @@ package org.example.vms;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
@@ -33,7 +34,7 @@ public abstract class VirtualMachine
     @Setter
     private double StorageSpace;
 
-
+    @BsonCreator
     public VirtualMachine(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
                           @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                           @BsonProperty("storageSpace") double storageSpace) {

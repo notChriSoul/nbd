@@ -13,8 +13,8 @@ public class VirtualMachineRepository extends AbstractMongoRepository {
     public VirtualMachine findById(Object id) {
         Bson filter = Filters.eq("_id", id);
         MongoCollection<VirtualMachine> collection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
-        FindIterable<VirtualMachine> vehicles = collection.find(filter);
-        return vehicles.first();
+        FindIterable<VirtualMachine> vms = collection.find(filter);
+        return vms.first();
     }
 
     public ArrayList<VirtualMachine> findAll() {
@@ -29,7 +29,7 @@ public class VirtualMachineRepository extends AbstractMongoRepository {
 
     public void delete(VirtualMachine vm) {
         Bson filter = Filters.eq("_id", vm.getId());
-        MongoCollection<VirtualMachine> collection = getDatabase().getCollection("vehicles", VirtualMachine.class);
+        MongoCollection<VirtualMachine> collection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
         collection.findOneAndDelete(filter);
     }
 

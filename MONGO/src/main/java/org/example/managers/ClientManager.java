@@ -5,12 +5,11 @@ import org.example.Client;
 public class ClientManager {
 
     public int createClient(String firstName, String lastName) {
-
+        return 1;
     }
 
     // READ - Get client by ID
     public Client getClient(int personalId) {
-
 
     }
 

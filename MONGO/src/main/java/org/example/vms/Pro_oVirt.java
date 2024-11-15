@@ -18,7 +18,7 @@ public class Pro_oVirt extends VirtualMachine {
     private int NUMA_nodes;
 
     @BsonCreator
-    public Pro_oVirt(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
+    public Pro_oVirt(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
                      @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                      @BsonProperty("storageSpace") double storageSpace,
                      @BsonProperty("numaNodes") int NUMA_nodes) {

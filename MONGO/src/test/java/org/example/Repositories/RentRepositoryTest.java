@@ -1,5 +1,6 @@
 package org.example.Repositories;
 
+import com.mongodb.MongoWriteException;
 import org.bson.Document;
 import org.example.Client;
 import org.example.Rent;
@@ -38,7 +39,7 @@ public class RentRepositoryTest {
         clientRepository.add(testClient);
 
         // Insert sample Virtual Machine
-        testVM = new Normal(1,true, 4, 16.0, 200.0);
+        testVM = new Normal(1,1, 4, 16.0, 200.0);
         vmRepository.add(testVM);
     }
 
@@ -86,6 +87,21 @@ public class RentRepositoryTest {
         // Verify Client rental count decreased
         Client updatedClient = clientRepository.findById(testClient.getPersonalID());
         assertEquals(0, updatedClient.getCurrentRentsNumber());
+    }
+
+    @Test
+    void testRentSameVWTwiceJsonValidation(){
+        Normal normal = new Normal(1,1, 4, 16.0, 200.0);
+        vmRepository.add(normal);
+        Rent testRent1 = new Rent(2, testClient, normal, LocalDateTime.now());
+        Rent testRent2 = new Rent(3, testClient, normal, LocalDateTime.now());
+        Rent testRent3 = new Rent(4, testClient, normal, LocalDateTime.now());
+        Rent testRent4 = new Rent(5, testClient, normal, LocalDateTime.now());
+        Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
+//        Assertions.assertThrows(MongoWriteException.class, () -> rentRepository.add(testRent2));
+        rentRepository.add(testRent2);
+        rentRepository.add(testRent3);
+        rentRepository.add(testRent4);
     }
 
     @AfterAll

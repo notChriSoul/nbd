@@ -17,7 +17,7 @@ public class Performance extends VirtualMachine {
     private final boolean NVMeStorage = true;
 
     @BsonCreator
-    public Performance(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
+    public Performance(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
                        @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                        @BsonProperty("storageSpace") double storageSpace,
                        @BsonProperty("gpu") String GPU) {

@@ -79,7 +79,9 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                         Filters.type("id", "int"),
                         Filters.gte("id", 1),
 
-                        Filters.type("isAvailable", "bool"),
+                        Filters.type("isAvailable", "int"),
+                        Filters.lte("isAvailable", 1),
+                        Filters.gte("isAvailable", 0),
 
                         Filters.type("cpuCores", "int"),
                         Filters.gte("cpuCores", 1),

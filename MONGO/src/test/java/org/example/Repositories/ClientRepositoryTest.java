@@ -65,4 +65,19 @@ public class ClientRepositoryTest {
         clientRepository.delete(client);
         Assertions.assertNull(clientRepository.findById("11111111113"));
     }
+
+    @Test
+    public void update_ValidClient_ClientUpdated() {
+        Client client = new Client("11111111111", "Firstname", "Lastname");
+        clientRepository.add(client);
+        String newFirstName = "NewFirstName";
+        String newLastName = "NewLastName";
+        client.setFirstName(newFirstName);
+        client.setLastName(newLastName);
+        clientRepository.update(client);
+        System.out.println(clientRepository.findById("11111111111").getFirstName());
+        System.out.println(clientRepository.findById("11111111111").getLastName());
+        Assertions.assertEquals(clientRepository.findById("11111111111").getFirstName(), newFirstName);
+        Assertions.assertEquals(clientRepository.findById("11111111111").getLastName(), newLastName);
+    }
 }

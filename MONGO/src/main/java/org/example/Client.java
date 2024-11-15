@@ -11,21 +11,17 @@ import org.bson.codecs.pojo.annotations.BsonId;
 public class Client {
 
 
-    @Getter
     @BsonId
     private String personalID;
 
     @Setter
-    @Getter
     @BsonProperty("firstName")
     private String firstName;
 
     @Setter
-    @Getter
     @BsonProperty("lastName")
     private String lastName;
 
-    @Getter
     @BsonProperty("currentRentsNumber")
     private int currentRentsNumber;
 

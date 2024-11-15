@@ -44,8 +44,9 @@ public class RentRepository extends AbstractMongoRepository {
 
             MongoCollection<VirtualMachine> vmCollection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
             Bson filter = Filters.eq("_id", rent.getVM().getId());
-            Bson updates = Updates.inc("rented", 1);
+            Bson updates = Updates.inc("isAvailable", -1);
             vmCollection.updateOne(clientSession, filter, updates);
+            getDatabase().getCollection("virtual_machines").find(filter).forEach(doc ->System.out.println(doc.toJson()));
 
             MongoCollection<Client> clientsCollection = getDatabase().getCollection("clients", Client.class);
             Bson clientFilter = Filters.eq("_id", rent.getClient().getPersonalID());
@@ -73,7 +74,7 @@ public class RentRepository extends AbstractMongoRepository {
             if (rent.getEndTime() != null) {
                 MongoCollection<VirtualMachine> vmCollection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
                 Bson vmFilter = Filters.eq("_id", rent.getVM().getId());
-                Bson updates = Updates.inc("rented", -1);
+                Bson updates = Updates.inc("isAvailable", 1);
                 vmCollection.updateOne(clientSession, vmFilter, updates);
 
                 MongoCollection<Client> clientsCollection = getDatabase().getCollection("clients", Client.class);

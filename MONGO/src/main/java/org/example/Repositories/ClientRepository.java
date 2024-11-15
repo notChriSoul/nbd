@@ -27,6 +27,12 @@ public class ClientRepository extends AbstractMongoRepository {
         collection.insertOne(client);
     }
 
+    public void update(Client client) {
+        MongoCollection<Client> collection = getDatabase().getCollection("clients", Client.class);
+        Bson filter = Filters.eq("_id", client.getPersonalID());
+        collection.replaceOne(filter, client);
+    }
+
     public void delete(Client client) {
         Bson filter = Filters.eq("_id", client.getPersonalID());
         MongoCollection<Client> collection = getDatabase().getCollection("clients", Client.class);

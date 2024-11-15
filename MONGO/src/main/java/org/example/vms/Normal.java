@@ -15,7 +15,7 @@ public class Normal extends VirtualMachine {
     private final boolean SSDSATAStorage = true;
 
     @BsonCreator
-    public Normal(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
+    public Normal(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
                   @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                   @BsonProperty("storageSpace") double storageSpace) {
         super(id, isAvailable, CPUCores, RAM, storageSpace);

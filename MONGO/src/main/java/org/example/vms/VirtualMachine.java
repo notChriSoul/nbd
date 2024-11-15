@@ -20,7 +20,7 @@ public abstract class VirtualMachine
 
     @BsonProperty("isAvailable")
     @Setter
-    private boolean isAvailable;
+    private int isAvailable;
 
     @BsonProperty("cpuCores")
     @Setter
@@ -35,7 +35,7 @@ public abstract class VirtualMachine
     private double StorageSpace;
 
     @BsonCreator
-    public VirtualMachine(@BsonProperty("id") int id, @BsonProperty("isAvailable") boolean isAvailable,
+    public VirtualMachine(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
                           @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                           @BsonProperty("storageSpace") double storageSpace) {
         this.id = id;

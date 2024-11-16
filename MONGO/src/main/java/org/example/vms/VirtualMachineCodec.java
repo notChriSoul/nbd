@@ -25,7 +25,7 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
 
         // Write common fields for all VirtualMachine types
         writer.writeInt32("id", vm.getId());
-        writer.writeInt32("isAvailable", vm.getIsAvailable());
+        writer.writeInt32("rented", vm.getRented());
         writer.writeInt32("cpuCores", vm.getCPUCores());
         writer.writeDouble("ram", vm.getRAM());
         writer.writeDouble("storageSpace", vm.getStorageSpace());
@@ -54,7 +54,7 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
 
         String type = null;
         int id = 0;
-        int isAvailable = 0;
+        int rented = 0;
         int cpuCores = 0;
         double ram = 0.0;
         double storageSpace = 0.0;
@@ -70,8 +70,8 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
                 case "id":
                     id = reader.readInt32();
                     break;
-                case "isAvailable":
-                    isAvailable = reader.readInt32();
+                case "rented":
+                    rented = reader.readInt32();
                     break;
                 case "cpuCores":
                     cpuCores = reader.readInt32();
@@ -98,9 +98,9 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
 
         // Instantiate the correct subclass based on the "_type" field
         return switch (type) {
-            case "normal" -> new Normal(id, isAvailable, cpuCores, ram, storageSpace);
-            case "performance" -> new Performance(id, isAvailable, cpuCores, ram, storageSpace, gpu);
-            case "proovirt" -> new Pro_oVirt(id, isAvailable, cpuCores, ram, storageSpace, numaNodes);
+            case "normal" -> new Normal(id, cpuCores, ram, storageSpace);
+            case "performance" -> new Performance(id, cpuCores, ram, storageSpace, gpu);
+            case "proovirt" -> new Pro_oVirt(id, cpuCores, ram, storageSpace, numaNodes);
             case null, default -> throw new IllegalArgumentException("Unsupported virtual machine type: " + type);
         };
     }

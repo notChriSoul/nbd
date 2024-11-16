@@ -18,9 +18,9 @@ public abstract class VirtualMachine
     @BsonId
     private int id;
 
-    @BsonProperty("isAvailable")
+    @BsonProperty("rented")
     @Setter
-    private int isAvailable;
+    private int rented = 0;
 
     @BsonProperty("cpuCores")
     @Setter
@@ -35,11 +35,11 @@ public abstract class VirtualMachine
     private double StorageSpace;
 
     @BsonCreator
-    public VirtualMachine(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
+    public VirtualMachine(@BsonProperty("id") int id,
                           @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                           @BsonProperty("storageSpace") double storageSpace) {
         this.id = id;
-        this.isAvailable = isAvailable;
+        this.rented = 0;
         this.CPUCores = CPUCores;
         this.RAM = RAM;
         StorageSpace = storageSpace;

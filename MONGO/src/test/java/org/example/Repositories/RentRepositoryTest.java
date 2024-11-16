@@ -39,7 +39,7 @@ public class RentRepositoryTest {
         clientRepository.add(testClient);
 
         // Insert sample Virtual Machine
-        testVM = new Normal(1,1, 4, 16.0, 200.0);
+        testVM = new Normal(1, 4, 16.0, 200.0);
         vmRepository.add(testVM);
     }
 
@@ -90,15 +90,31 @@ public class RentRepositoryTest {
     }
 
     @Test
+    public void update_UpdatedRent_RentUpdated(){
+        Client client = new Client ("11111111110", "Firstname", "Lastname");
+        Normal normal = new Normal(1, 4, 16.0, 200.0);
+        Rent rent = new Rent(10000, client, normal, LocalDateTime.now());
+        LocalDateTime endTime = LocalDateTime.now().plusHours(10);
+        rentRepository.add(rent);
+        rent.setEndTime(endTime);
+        rentRepository.update(rent);
+        Assertions.assertEquals(rentRepository.findById(10000).getEndTime(), endTime.withNano(900000));
+    }
+   // org.opentest4j.AssertionFailedError:
+   // Expected :2024-11-17T01:54:01.294
+    // Actual   :2024-11-17T01:54:01.000900
+    // ?????????????
+
+    @Test
     void testRentSameVWTwiceJsonValidation(){
-        Normal normal = new Normal(1,1, 4, 16.0, 200.0);
+        Normal normal = new Normal(1, 4, 16.0, 200.0);
         vmRepository.add(normal);
         Rent testRent1 = new Rent(2, testClient, normal, LocalDateTime.now());
         Rent testRent2 = new Rent(3, testClient, normal, LocalDateTime.now());
         Rent testRent3 = new Rent(4, testClient, normal, LocalDateTime.now());
         Rent testRent4 = new Rent(5, testClient, normal, LocalDateTime.now());
         Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
-//        Assertions.assertThrows(MongoWriteException.class, () -> rentRepository.add(testRent2));
+        //Assertions.assertThrows(MongoWriteException.class, () -> rentRepository.add(testRent2));
         rentRepository.add(testRent2);
         rentRepository.add(testRent3);
         rentRepository.add(testRent4);

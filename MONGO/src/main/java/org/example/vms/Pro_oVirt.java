@@ -18,11 +18,11 @@ public class Pro_oVirt extends VirtualMachine {
     private int NUMA_nodes;
 
     @BsonCreator
-    public Pro_oVirt(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
+    public Pro_oVirt(@BsonProperty("id") int id,
                      @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                      @BsonProperty("storageSpace") double storageSpace,
                      @BsonProperty("numaNodes") int NUMA_nodes) {
-        super(id, isAvailable, CPUCores, RAM, storageSpace);
+        super(id, CPUCores, RAM, storageSpace);
         this.NUMA_nodes = NUMA_nodes;
     }
 

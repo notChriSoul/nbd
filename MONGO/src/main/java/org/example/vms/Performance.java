@@ -17,11 +17,11 @@ public class Performance extends VirtualMachine {
     private final boolean NVMeStorage = true;
 
     @BsonCreator
-    public Performance(@BsonProperty("id") int id, @BsonProperty("isAvailable") int isAvailable,
+    public Performance(@BsonProperty("id") int id,
                        @BsonProperty("ram") int CPUCores, @BsonProperty("cpuCores") double RAM,
                        @BsonProperty("storageSpace") double storageSpace,
                        @BsonProperty("gpu") String GPU) {
-        super(id, isAvailable, CPUCores, RAM, storageSpace);
+        super(id, CPUCores, RAM, storageSpace);
         this.GPU = GPU;
     }
 

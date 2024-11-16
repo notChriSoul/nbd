@@ -3,6 +3,7 @@ package org.example.Repositories;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
 import org.example.Client;
 
@@ -28,9 +29,14 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public void update(Client client) {
-        MongoCollection<Client> collection = getDatabase().getCollection("clients", Client.class);
         Bson filter = Filters.eq("_id", client.getPersonalID());
-        collection.replaceOne(filter, client);
+        MongoCollection<Client> collection = getDatabase().getCollection("clients", Client.class);
+        Bson updates = Updates.combine(
+                Updates.set("firstName", client.getFirstName()),
+                Updates.set("lastName", client.getLastName()),
+                Updates.set("clientType", client.getCurrentRentsNumber())
+        );
+        collection.findOneAndUpdate(filter, updates);
     }
 
     public void delete(Client client) {

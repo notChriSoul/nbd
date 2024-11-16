@@ -1,5 +1,6 @@
 package org.example.Repositories;
 
+import com.mongodb.client.model.Updates;
 import org.example.vms.VirtualMachine;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -20,6 +21,18 @@ public class VirtualMachineRepository extends AbstractMongoRepository {
     public ArrayList<VirtualMachine> findAll() {
         MongoCollection<VirtualMachine> collection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
         return collection.find().into(new ArrayList<>());
+    }
+
+    public void update(VirtualMachine vm) {
+        Bson filter = Filters.eq("_id", vm.getId());
+        MongoCollection<VirtualMachine> collection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
+        Bson updates = Updates.combine(
+                Updates.set("_id", vm.getId()),
+                Updates.set("cpuCores", vm.getCPUCores()),
+                Updates.set("ram", vm.getRAM()),
+                Updates.set("storageSpace", vm.getStorageSpace())
+        );
+        collection.findOneAndUpdate(filter, updates);
     }
 
     public void add(VirtualMachine vm) {

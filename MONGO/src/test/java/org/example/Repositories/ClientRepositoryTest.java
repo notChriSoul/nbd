@@ -16,11 +16,12 @@ public class ClientRepositoryTest {
 
     @BeforeEach
     public void setUp() {
+        clientRepository.initDbConnection();
         clientRepository.getDatabase().getCollection("clients", Client.class).deleteMany(new Document());
     }
 
-    @AfterAll
-    public static void tearDown() {
+    @AfterEach
+    public void tearDown() {
         clientRepository.getDatabase().getCollection("clients", Client.class).deleteMany(new Document());
         clientRepository.close();
     }

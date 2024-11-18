@@ -24,7 +24,7 @@ public class RentRepositoryTest {
     private Client testClient;
     private Rent testRent;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         // Initialize repositories
         rentRepository = new RentRepository();
@@ -45,8 +45,8 @@ public class RentRepositoryTest {
         vmRepository.add(testVM);
     }
 
-    @AfterAll
-    public static void tearDown() {
+    @AfterEach
+    public void tearDown() {
         rentRepository.getDatabase().getCollection("rents", Rent.class).deleteMany(new Document());
         rentRepository.close();
         clientRepository.getDatabase().getCollection("clients", Client.class).deleteMany(new Document());
@@ -111,7 +111,6 @@ public class RentRepositoryTest {
         Rent testRent2 = new Rent(3, testClient, normal, LocalDateTime.now());
         Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
         Assertions.assertThrows(MongoCommandException.class, () -> rentRepository.add(testRent2));
-
     }
 
     @Test
@@ -126,12 +125,5 @@ public class RentRepositoryTest {
         Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
         Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent2));
         Assertions.assertThrows(MongoWriteException.class,() -> rentRepository.add(testRent3));
-    }
-
-    @AfterAll
-    void cleanup() {
-        rentRepository.close();
-        vmRepository.close();
-        clientRepository.close();
     }
 }

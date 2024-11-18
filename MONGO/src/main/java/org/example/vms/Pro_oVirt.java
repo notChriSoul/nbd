@@ -1,12 +1,12 @@
 package org.example.vms;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-@Getter
+@Data
 @NoArgsConstructor
 @BsonDiscriminator(key = "_type", value = "proovirt")
 public class Pro_oVirt extends VirtualMachine {

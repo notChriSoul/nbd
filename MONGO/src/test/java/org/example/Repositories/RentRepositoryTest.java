@@ -1,5 +1,6 @@
 package org.example.Repositories;
 
+import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
 import org.bson.Document;
 import org.example.Client;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RentRepositoryTest {
@@ -94,30 +96,36 @@ public class RentRepositoryTest {
         Client client = new Client ("11111111110", "Firstname", "Lastname");
         Normal normal = new Normal(1, 4, 16.0, 200.0);
         Rent rent = new Rent(10000, client, normal, LocalDateTime.now());
-        LocalDateTime endTime = LocalDateTime.now().plusHours(10);
+        LocalDateTime endTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).plusHours(10);
         rentRepository.add(rent);
         rent.setEndTime(endTime);
         rentRepository.update(rent);
-        Assertions.assertEquals(rentRepository.findById(10000).getEndTime(), endTime.withNano(900000));
+        Assertions.assertEquals(endTime, rentRepository.findById(10000).getEndTime());
     }
-   // org.opentest4j.AssertionFailedError:
-   // Expected :2024-11-17T01:54:01.294
-    // Actual   :2024-11-17T01:54:01.000900
-    // ?????????????
 
     @Test
     void testRentSameVWTwiceJsonValidation(){
-        Normal normal = new Normal(1, 4, 16.0, 200.0);
+        Normal normal = new Normal(3, 4, 16.0, 200.0);
         vmRepository.add(normal);
         Rent testRent1 = new Rent(2, testClient, normal, LocalDateTime.now());
         Rent testRent2 = new Rent(3, testClient, normal, LocalDateTime.now());
-        Rent testRent3 = new Rent(4, testClient, normal, LocalDateTime.now());
-        Rent testRent4 = new Rent(5, testClient, normal, LocalDateTime.now());
         Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
-        //Assertions.assertThrows(MongoWriteException.class, () -> rentRepository.add(testRent2));
-        rentRepository.add(testRent2);
-        rentRepository.add(testRent3);
-        rentRepository.add(testRent4);
+        Assertions.assertThrows(MongoCommandException.class, () -> rentRepository.add(testRent2));
+
+    }
+
+    @Test
+    void testClientMaxNumberOfRents(){
+        Normal normal = new Normal(3, 4, 16.0, 200.0);
+        Normal notNormal = new Normal(4, 4, 16.0, 200.0);
+        Normal notNormal2 = new Normal(5, 4, 16.0, 200.0);
+        vmRepository.add(normal);
+        Rent testRent1 = new Rent(2, testClient, normal, LocalDateTime.now());
+        Rent testRent2 = new Rent(3, testClient, notNormal, LocalDateTime.now());
+        Rent testRent3 = new Rent(4, testClient, notNormal2, LocalDateTime.now());
+        Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent1));
+        Assertions.assertDoesNotThrow(() -> rentRepository.add(testRent2));
+        Assertions.assertThrows(MongoWriteException.class,() -> rentRepository.add(testRent3));
     }
 
     @AfterAll

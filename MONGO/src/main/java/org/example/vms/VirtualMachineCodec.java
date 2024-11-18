@@ -24,7 +24,7 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
         }
 
         // Write common fields for all VirtualMachine types
-        writer.writeInt32("id", vm.getId());
+        writer.writeInt32("_id", vm.getId());
         writer.writeInt32("rented", vm.getRented());
         writer.writeInt32("cpuCores", vm.getCPUCores());
         writer.writeDouble("ram", vm.getRAM());
@@ -67,7 +67,7 @@ public class VirtualMachineCodec implements Codec<VirtualMachine> {
                 case "_type":
                     type = reader.readString();
                     break;
-                case "id":
+                case "_id":
                     id = reader.readInt32();
                     break;
                 case "rented":

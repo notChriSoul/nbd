@@ -45,7 +45,7 @@ public class RentRepository extends AbstractMongoRepository {
             MongoCollection<VirtualMachine> vmCollection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
             Bson filter = Filters.eq("_id", rent.getVM().getId());
             Bson updates = Updates.inc("rented", 1);
-            vmCollection.updateOne(clientSession, filter, updates);
+            vmCollection.findOneAndUpdate(clientSession, filter, updates);
             getDatabase().getCollection("virtual_machines").find(filter).forEach(doc ->System.out.println(doc.toJson()));
 
             MongoCollection<Client> clientsCollection = getDatabase().getCollection("clients", Client.class);

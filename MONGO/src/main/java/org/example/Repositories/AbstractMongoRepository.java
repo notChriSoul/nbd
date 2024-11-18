@@ -66,8 +66,8 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
                                         .append("_id", new Document("bsonType", "string"))
                                         .append("firstName", new Document("bsonType", "string"))
                                         .append("lastName", new Document("bsonType", "string"))
-                                        .append("currentRentsNumber", new Document("bsonType", "int").append("minimum", 0)))))
-        .validationAction(ValidationAction.ERROR);
+                                        .append("currentRentsNumber", new Document("bsonType", "int").append("minimum", 0).append("maximum", 2))))
+                ).validationAction(ValidationAction.ERROR);
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions().validationOptions(validationOptions);
         getDatabase().createCollection("clients", createCollectionOptions);
     }
@@ -75,8 +75,8 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     private void createVirtualMachinesCollection() {
         ValidationOptions validationOptions = new ValidationOptions().validator(
                 Filters.and(
-                        Filters.type("id", "int"),
-                        Filters.gte("id", 1),
+                        Filters.type("_id", "int"),
+                        Filters.gte("_id", 1),
 
                         Filters.type("rented", "int"),
                         Filters.lte("rented", 1),

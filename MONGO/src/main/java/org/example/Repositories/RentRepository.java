@@ -72,7 +72,7 @@ public class RentRepository extends AbstractMongoRepository {
             MongoCollection<Rent> collection = getDatabase().getCollection("rents", Rent.class);
             Bson rentUpdates = Updates.combine(
                     Updates.set("client", rent.getClient()),
-                    Updates.set("vm", rent.getVM()),
+                    Updates.set("vM", rent.getVM()),
                     Updates.set("beginTime", rent.getBeginTime()),
                     Updates.set("endTime", rent.getEndTime()),
                     Updates.set("rentCost", rent.getRentCost())

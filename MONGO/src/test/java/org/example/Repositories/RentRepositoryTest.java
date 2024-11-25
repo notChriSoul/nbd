@@ -102,6 +102,7 @@ public class RentRepositoryTest {
         archiveRent.endRent();
         Assertions.assertEquals(0, archiveRent.getRentDays());
         archiveRent.setEndTime(LocalDateTime.now().minusDays(1));
+        archiveRent.endRent();
         Assertions.assertEquals(0, archiveRent.getRentDays());
 
         rentRepository.endRent(archiveRent);

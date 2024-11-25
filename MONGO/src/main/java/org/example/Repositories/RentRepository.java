@@ -5,6 +5,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.example.Rent;
 import org.example.Client;
@@ -101,19 +102,19 @@ public class RentRepository extends AbstractMongoRepository {
     }
 
 
-    public void delete(Rent rent) {
+    public void endRent(Rent rent) {
         ClientSession clientSession = getMongoClient().startSession();
         try {
             clientSession.startTransaction();
 
-            Bson rentFilter = Filters.eq("_id", rent.getId());
             MongoCollection<Rent> collection = getDatabase().getCollection("rents", Rent.class);
-            collection.findOneAndDelete(clientSession, rentFilter);
+            Bson docFilter = Filters.and(Filters.eq("_id", rent.getId()), Filters.eq("vM._id", rent.getVM().getId()), Filters.eq("client._id", rent.getClient().getPersonalID()));
+            Rent archivedRent =  collection.findOneAndDelete(clientSession, docFilter);
 
             if (rent.getEndTime() != null) {
                 MongoCollection<VirtualMachine> vmCollection = getDatabase().getCollection("virtual_machines", VirtualMachine.class);
                 Bson vmFilter = Filters.eq("_id", rent.getVM().getId());
-                Bson updates = Updates.inc("rented", 1);
+                Bson updates = Updates.inc("rented", -1);
                 vmCollection.updateOne(clientSession, vmFilter, updates);
 
                 MongoCollection<Client> clientsCollection = getDatabase().getCollection("clients", Client.class);
@@ -121,6 +122,11 @@ public class RentRepository extends AbstractMongoRepository {
                 Bson clientUpdates = Updates.inc("currentRentsNumber", -1);
                 clientsCollection.updateOne(clientSession, clientFilter, clientUpdates);
             }
+            MongoCollection<Rent> archived = getDatabase().getCollection("archived", Rent.class);
+            Document date = new Document("$set", new Document("endTime", rent.getEndTime()));
+            archived.insertOne(archivedRent);
+            archived.updateOne(docFilter, date);
+
 
             clientSession.commitTransaction();
         } catch (Exception e) {

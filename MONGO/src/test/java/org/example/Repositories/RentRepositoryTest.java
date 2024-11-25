@@ -48,6 +48,7 @@ public class RentRepositoryTest {
     @AfterEach
     public void tearDown() {
         rentRepository.getDatabase().getCollection("rents", Rent.class).deleteMany(new Document());
+        rentRepository.getDatabase().getCollection("archived", Rent.class).deleteMany(new Document());
         rentRepository.close();
         clientRepository.getDatabase().getCollection("clients", Client.class).deleteMany(new Document());
         clientRepository.close();
@@ -74,13 +75,13 @@ public class RentRepositoryTest {
 
     @Test
     @DisplayName("Test deleting a Rent")
-    void testDeleteRent() {
+    void testEndRent() {
         if (testRent == null) {
             testAddRent(); // Add a rent if it doesn't exist
         }
 
         // Delete rent
-        rentRepository.delete(testRent);
+        rentRepository.endRent(testRent);
 
         // Verify rent is deleted
         Rent deletedRent = rentRepository.findById(testRent.getId());
@@ -89,6 +90,21 @@ public class RentRepositoryTest {
         // Verify Client rental count decreased
         Client updatedClient = clientRepository.findById(testClient.getPersonalID());
         assertEquals(0, updatedClient.getCurrentRentsNumber());
+    }
+    @Test
+    void testArchiveRent() {
+        Client Client = new Client("234", "John", "Doe");
+        clientRepository.add(Client);
+        Normal normal = new Normal(15432, 4, 16.0, 200.0);
+        vmRepository.add(normal);
+        Rent archiveRent = new Rent(132, Client, normal, LocalDateTime.now());
+        rentRepository.add(archiveRent);
+        archiveRent.endRent();
+        Assertions.assertEquals(0, archiveRent.getRentDays());
+        archiveRent.setEndTime(LocalDateTime.now().minusDays(1));
+        Assertions.assertEquals(0, archiveRent.getRentDays());
+
+        rentRepository.endRent(archiveRent);
     }
 
     @Test

@@ -62,8 +62,10 @@ public class Rent {
     @BsonIgnore
     public void endRent()
     {
-        setEndTime(LocalDateTime.now());
-        setRentCost(getRentDays() * getVM().calculateRentalPrice());
+        if (endTime == null || endTime.isBefore(beginTime)) {
+            endTime = LocalDateTime.now();
+        }
+        rentCost = getRentDays() * getVM().calculateRentalPrice();
     }
 
 }

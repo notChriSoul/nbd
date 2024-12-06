@@ -3,7 +3,6 @@ services:
     mongo_1:
         build: .
         image: mongocustom:8.0.1
-        restart: always
         container_name: mongodb1
         hostname: mongodb1
         networks:
@@ -26,7 +25,6 @@ services:
     mongo_2:
         build: .
         image: mongocustom:8.0.1
-        restart: always
         container_name: mongodb2
         hostname: mongodb2
         networks:
@@ -49,7 +47,6 @@ services:
     mongo_3:
         build: .
         image: mongocustom:8.0.1
-        restart: always
         container_name: mongodb3
         hostname: mongodb3
         networks:
@@ -108,7 +105,6 @@ services:
             - mongo-configdb-data-3:/data/configdb:ro
     redis-stack:
         image: redis/redis-stack:7.4.0-v1
-        restart: always
         container_name: redis-stack
         volumes:
             -   redis-stack-data:/bitnami/redis/data

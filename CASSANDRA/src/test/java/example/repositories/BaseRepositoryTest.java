@@ -10,5 +10,6 @@ class BaseRepositoryTest {
         repo.initSession();
 
         repo.initKeyspace();
+        repo.createClientTable();
     }
 }

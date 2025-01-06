@@ -1,8 +1,6 @@
 package example.dao;
 
-import com.datastax.oss.driver.api.mapper.annotations.Dao;
-import com.datastax.oss.driver.api.mapper.annotations.Insert;
-import com.datastax.oss.driver.api.mapper.annotations.Query;
+import com.datastax.oss.driver.api.mapper.annotations.*;
 import example.model.Client;
 import example.schemas.ClientSchema;
 
@@ -13,5 +11,11 @@ public interface ClientDao {
 
     @Query("SELECT * FROM " + ClientSchema.CLIENTS + " WHERE personal_id = :id")
     Client findClientById(String id);
+
+    @Update(ifExists = true)
+    void update(Client client);
+
+    @Delete()
+    void delete(Client client);
 
 }

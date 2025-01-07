@@ -1,10 +1,11 @@
-package example.model.dao;
+package example.dao;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import example.dao.ClientDao;
-import example.mapper.ClientMapper;
 import example.mapper.ClientMapperBuilder;
+import example.mapper.VmMapperBuilder;
 import example.model.Client;
+import example.model.vms.Normal;
+import example.model.vms.Pro;
 import example.repositories.BaseRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

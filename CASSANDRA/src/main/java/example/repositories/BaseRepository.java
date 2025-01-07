@@ -10,6 +10,7 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateKeyspace;
 import example.schemas.ClientSchema;
+import example.schemas.VmSchema;
 import lombok.Getter;
 
 import java.net.InetSocketAddress;
@@ -55,7 +56,21 @@ public class BaseRepository implements AutoCloseable {
         session.execute(createClients);
     }
 
-    public void createVmTable() {}
+    public void createVmTable() {
+        SimpleStatement createVms = SchemaBuilder.createTable(CqlIdentifier.fromCql(VmSchema.VMS))
+                .ifNotExists()
+                .withPartitionKey(CqlIdentifier.fromCql(VmSchema.ID), DataTypes.TEXT)
+                .withClusteringColumn(CqlIdentifier.fromCql(VmSchema.DISCRIMINATOR), DataTypes.TEXT)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.IS_RENTED), DataTypes.BOOLEAN)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.RAM), DataTypes.INT)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.SOTRAGE), DataTypes.INT)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.RENTAL_PRICE), DataTypes.INT)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.CORES), DataTypes.INT)
+                .withColumn(CqlIdentifier.fromCql(VmSchema.SOCKETS), DataTypes.INT)
+                .build();
+
+        session.execute(createVms);
+    }
 
     public void createRentTable() {}
 

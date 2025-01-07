@@ -5,13 +5,17 @@ import com.datastax.oss.driver.api.mapper.annotations.Entity;
 import com.datastax.oss.driver.api.mapper.annotations.PartitionKey;
 import com.datastax.oss.driver.api.mapper.annotations.PropertyStrategy;
 import example.schemas.SchemaConst;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-//@Entity(defaultKeyspace = SchemaConst.RENT_A_VM_NAMESPACE)
+@Entity(defaultKeyspace = SchemaConst.RENT_A_VM_NAMESPACE)
 @PropertyStrategy(mutable = false)
 @CqlName(SchemaConst.VMS)
+@Data
+@NoArgsConstructor
 public class VirtualMachine {
     @PartitionKey
-    private int vmId;
+    private String vmId;
 
     private String discriminator;
 
@@ -22,7 +26,7 @@ public class VirtualMachine {
     private int storage;
     private int rentalPrice;
 
-    public VirtualMachine(int vmId, String discriminator, boolean rented, int ram, int storage, int rentalPrice) {
+    public VirtualMachine(String vmId, String discriminator, boolean rented, int ram, int storage, int rentalPrice) {
         this.vmId = vmId;
         this.discriminator = discriminator;
         this.rented = rented;

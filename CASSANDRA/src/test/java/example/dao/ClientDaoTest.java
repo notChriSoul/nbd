@@ -2,10 +2,7 @@ package example.dao;
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import example.mapper.ClientMapperBuilder;
-import example.mapper.VmMapperBuilder;
 import example.model.Client;
-import example.model.vms.Normal;
-import example.model.vms.Pro;
 import example.repositories.BaseRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,7 +50,7 @@ class ClientDaoTest {
         clientDao.create(client);
         Client deletedClient = clientDao.findClientById("3");
         Assertions.assertNotNull(deletedClient);
-        clientDao.delete(deletedClient);
+        clientDao.delete("3");
         deletedClient = clientDao.findClientById("3");
         Assertions.assertNull(deletedClient);
     }

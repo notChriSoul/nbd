@@ -15,7 +15,7 @@ public interface ClientDao {
     @Update(ifExists = true)
     void update(Client client);
 
-    @Delete()
-    void delete(Client client);
+    @Delete(entityClass = Client.class, customWhereClause = "personal_id = :id")
+    void delete(String id);
 
 }

@@ -18,6 +18,6 @@ public interface VmDao {
             entityHelpers = {Normal.class, Pro.class})
     void create(VirtualMachine vm);
 
-    @Delete
-    void remove(VirtualMachine virtualMachine);
+    @Delete(entityClass = VirtualMachine.class, customWhereClause = "vm_id =: id")
+    void remove(String id);
 }

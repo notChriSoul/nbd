@@ -1,7 +1,6 @@
 package example.dao;
 
 import com.datastax.oss.driver.api.core.CqlSession;
-import example.mapper.ClientMapperBuilder;
 import example.mapper.VmMapperBuilder;
 import example.model.vms.Normal;
 import example.model.vms.Pro;
@@ -33,13 +32,25 @@ class VmDaoTest {
 
     @Test
     void addPro() {
-        Pro pro = new Pro("1",1, "Pro", false, 1, 1, 1);
+        Pro pro = new Pro("2",1, "Pro", false, 1, 1, 1);
         vmDao.create(pro);
     }
 
     @Test
     void findById() {
         VirtualMachine vm = vmDao.findById("1");
+        System.out.println(vm);
+    }
+
+    @Test
+    void delete() {
+        Normal normal = new Normal("32", 2,"Normal", false, 3, 1, 1);
+        vmDao.create(normal);
+        VirtualMachine normal2 = vmDao.findById("32");
+        assertNotNull(normal2);
+        vmDao.remove("32");
+        VirtualMachine vm = vmDao.findById("32");
+        assertNull(vm);
         System.out.println(vm);
     }
 }

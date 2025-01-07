@@ -70,13 +70,16 @@ public class vmGetByIdProvider {
         Row row = session.execute(selectVm.build()).one();
 
 
-        String discriminator = row.getString(VmSchema.DISCRIMINATOR);
-
-        return switch (discriminator) {
-            case "Normal" -> getNormal(row);
-            case "Pro" -> getPro(row);
-            default -> throw new IllegalStateException("Unexpected value: " + discriminator);
-        };
+        try {
+            String discriminator = row.getString(VmSchema.DISCRIMINATOR);
+            return switch (discriminator) {
+                case "Normal" -> getNormal(row);
+                case "Pro" -> getPro(row);
+                default -> throw new IllegalStateException("Unexpected value: " + discriminator);
+            };
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     private Normal getNormal(Row row) {

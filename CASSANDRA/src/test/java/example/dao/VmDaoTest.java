@@ -5,7 +5,7 @@ import example.mapper.VmMapperBuilder;
 import example.model.vms.Normal;
 import example.model.vms.Pro;
 import example.model.vms.VirtualMachine;
-import example.repositories.BaseRepository;
+import example.db.BaseRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

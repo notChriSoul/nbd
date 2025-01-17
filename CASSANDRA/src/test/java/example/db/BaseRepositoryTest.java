@@ -1,4 +1,4 @@
-package example.repositories;
+package example.db;
 
 import org.junit.jupiter.api.Test;
 

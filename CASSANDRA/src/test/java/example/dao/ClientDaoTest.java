@@ -3,7 +3,7 @@ package example.dao;
 import com.datastax.oss.driver.api.core.CqlSession;
 import example.mapper.ClientMapperBuilder;
 import example.model.Client;
-import example.repositories.BaseRepository;
+import example.db.BaseRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

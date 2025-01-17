@@ -1,4 +1,4 @@
-package example.repositories;
+package example.db;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
@@ -72,7 +72,29 @@ public class BaseRepository implements AutoCloseable {
         session.execute(createVms);
     }
 
-    public void createRentTable() {}
+    public void createRentTable() {
+        SimpleStatement createRentsByClient = SchemaBuilder.createTable(CqlIdentifier.fromCql("rents_by_client"))
+                .ifNotExists()
+                .withPartitionKey(CqlIdentifier.fromCql(ClientSchema.PERSONAL_ID), DataTypes.TEXT)
+                .withClusteringColumn(CqlIdentifier.fromCql("rent_id"), DataTypes.BIGINT)
+                .withColumn(CqlIdentifier.fromCql("vm_id"), DataTypes.TEXT)
+                .withColumn(CqlIdentifier.fromCql("begin_time"), DataTypes.TIMESTAMP)
+                .withColumn(CqlIdentifier.fromCql("end_time"), DataTypes.TIMESTAMP) .withColumn(CqlIdentifier.fromCql("rent_cost"), DataTypes.DOUBLE)
+                .build();
+
+        SimpleStatement createRentsByVm = SchemaBuilder.createTable (CqlIdentifier.fromCql("rents_by_vm"))
+                .ifNotExists()
+                .withPartitionKey(CqlIdentifier.fromCql("vm_id"), DataTypes.TEXT)
+                .withClusteringColumn(CqlIdentifier.fromCql("rent_id"), DataTypes.BIGINT)
+                .withColumn(CqlIdentifier.fromCql("personal_id"), DataTypes.TEXT)
+                .withColumn(CqlIdentifier.fromCql("begin_time"), DataTypes.TIMESTAMP)
+                .withColumn(CqlIdentifier.fromCql("end_time"), DataTypes.TIMESTAMP)
+                .withColumn(CqlIdentifier.fromCql("rent_cost"), DataTypes.DOUBLE)
+                .build();
+
+        session.execute(createRentsByClient);
+        session.execute(createRentsByVm);
+    }
 
     public void checkConnection() {
         try {

@@ -1,4 +1,4 @@
-package example.repositories;
+package example.db;
 
 import com.datastax.oss.driver.api.core.addresstranslation.AddressTranslator;
 import com.datastax.oss.driver.api.core.context.DriverContext;

@@ -1,15 +1,16 @@
 package example.dao;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import example.db.BaseRepository;
 import example.mapper.VmMapperBuilder;
 import example.model.vms.Normal;
 import example.model.vms.Pro;
 import example.model.vms.VirtualMachine;
-import example.db.BaseRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class VmDaoTest {
 
@@ -19,6 +20,7 @@ class VmDaoTest {
     static void setUp() {
         BaseRepository baseRepository = new BaseRepository();
         baseRepository.initSession();
+        baseRepository.createVmTable();
         CqlSession session = baseRepository.getSession();
         vmDao = new VmMapperBuilder(session).build().VmDao();
     }

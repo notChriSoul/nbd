@@ -12,7 +12,6 @@ import example.model.vms.Normal;
 import example.model.vms.Pro;
 import example.model.vms.VirtualMachine;
 import example.schemas.SchemaConst;
-import example.schemas.VmSchema;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
@@ -35,26 +34,26 @@ public class vmGetByIdProvider {
                 Normal normal = (Normal) vm;
                 yield session.prepare(normalEntityHelper.insert().build())
                         .bind()
-                        .setString(VmSchema.ID, normal.getVmId())
-                        .setString(VmSchema.DISCRIMINATOR, normal.getDiscriminator())
-                        .setBoolean(VmSchema.IS_RENTED, normal.isRented())
-                        .setInt(VmSchema.RAM, normal.getRam())
-                        .setInt(VmSchema.SOTRAGE, normal.getStorage())
-                        .setInt(VmSchema.RENTAL_PRICE, normal.getRentalPrice())
-                        .setInt(VmSchema.CORES, normal.getCores());
+                        .setString(SchemaConst.VM_ID, normal.getVmId())
+                        .setString(SchemaConst.DISCRIMINATOR, normal.getDiscriminator())
+                        .setBoolean(SchemaConst.IS_RENTED, normal.isRented())
+                        .setInt(SchemaConst.RAM, normal.getRam())
+                        .setInt(SchemaConst.SOTRAGE, normal.getStorage())
+                        .setInt(SchemaConst.RENTAL_PRICE, normal.getRentalPrice())
+                        .setInt(SchemaConst.CORES, normal.getCores());
             }
 
             case "Pro" -> {
                 Pro pro = (Pro) vm;
                 yield session.prepare(proEntityHelper.insert().build())
                         .bind()
-                        .setString(VmSchema.ID, pro.getVmId())
-                        .setString(VmSchema.DISCRIMINATOR, pro.getDiscriminator())
-                        .setBoolean(VmSchema.IS_RENTED, pro.isRented())
-                        .setInt(VmSchema.RAM, pro.getRam())
-                        .setInt(VmSchema.SOTRAGE, pro.getStorage())
-                        .setInt(VmSchema.RENTAL_PRICE, pro.getRentalPrice())
-                        .setInt(VmSchema.SOCKETS, pro.getSockets());
+                        .setString(SchemaConst.VM_ID, pro.getVmId())
+                        .setString(SchemaConst.DISCRIMINATOR, pro.getDiscriminator())
+                        .setBoolean(SchemaConst.IS_RENTED, pro.isRented())
+                        .setInt(SchemaConst.RAM, pro.getRam())
+                        .setInt(SchemaConst.SOTRAGE, pro.getStorage())
+                        .setInt(SchemaConst.RENTAL_PRICE, pro.getRentalPrice())
+                        .setInt(SchemaConst.SOCKETS, pro.getSockets());
             }
 
             default -> throw new IllegalStateException("Unexpected value: " + vm.getDiscriminator());
@@ -71,7 +70,7 @@ public class vmGetByIdProvider {
 
 
         try {
-            String discriminator = row.getString(VmSchema.DISCRIMINATOR);
+            String discriminator = row.getString(SchemaConst.DISCRIMINATOR);
             return switch (discriminator) {
                 case "Normal" -> getNormal(row);
                 case "Pro" -> getPro(row);
@@ -84,23 +83,23 @@ public class vmGetByIdProvider {
 
     private Normal getNormal(Row row) {
         return new Normal(
-                row.getString(VmSchema.ID),
-                row.getInt(VmSchema.CORES),
-                row.getString(VmSchema.DISCRIMINATOR),
-                row.getBoolean(VmSchema.IS_RENTED),
-                row.getInt(VmSchema.RAM),
-                row.getInt(VmSchema.SOTRAGE),
-                row.getInt(VmSchema.RENTAL_PRICE));
+                row.getString(SchemaConst.VM_ID),
+                row.getInt(SchemaConst.CORES),
+                row.getString(SchemaConst.DISCRIMINATOR),
+                row.getBoolean(SchemaConst.IS_RENTED),
+                row.getInt(SchemaConst.RAM),
+                row.getInt(SchemaConst.SOTRAGE),
+                row.getInt(SchemaConst.RENTAL_PRICE));
     }
 
     private Pro getPro(Row row) {
         return new Pro(
-                row.getString(VmSchema.ID),
-                row.getInt(VmSchema.SOCKETS),
-                row.getString(VmSchema.DISCRIMINATOR),
-                row.getBoolean(VmSchema.IS_RENTED),
-                row.getInt(VmSchema.RAM),
-                row.getInt(VmSchema.SOTRAGE),
-                row.getInt(VmSchema.RENTAL_PRICE));
+                row.getString(SchemaConst.VM_ID),
+                row.getInt(SchemaConst.SOCKETS),
+                row.getString(SchemaConst.DISCRIMINATOR),
+                row.getBoolean(SchemaConst.IS_RENTED),
+                row.getInt(SchemaConst.RAM),
+                row.getInt(SchemaConst.SOTRAGE),
+                row.getInt(SchemaConst.RENTAL_PRICE));
     }
 }

@@ -1,6 +1,5 @@
 package example.db;
 
-import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
@@ -9,8 +8,7 @@ import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
 import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.querybuilder.SchemaBuilder;
 import com.datastax.oss.driver.api.querybuilder.schema.CreateKeyspace;
-import example.schemas.ClientSchema;
-import example.schemas.VmSchema;
+import example.schemas.CQLSchema;
 import lombok.Getter;
 
 import java.net.InetSocketAddress;
@@ -25,12 +23,12 @@ public class BaseRepository implements AutoCloseable {
                 .addContactPoint(new InetSocketAddress("cassandra2", 9043))
                 .withLocalDatacenter("dc1")
                 .withAuthCredentials("cassandra", "cassandrapassword")
-                .withKeyspace(CqlIdentifier.fromCql("rent_a_vm"))
+                .withKeyspace(CQLSchema.RENT_A_VM_NAMESPACE)
                 .build();
     }
 
     public void initKeyspace() {
-        CreateKeyspace keyspace = SchemaBuilder.createKeyspace(CqlIdentifier.fromCql("rent_a_vm"))
+        CreateKeyspace keyspace = SchemaBuilder.createKeyspace(CQLSchema.RENT_A_VM_NAMESPACE)
                 .ifNotExists()
                 .withSimpleStrategy(2)
                 .withDurableWrites(true);
@@ -45,51 +43,52 @@ public class BaseRepository implements AutoCloseable {
     }
 
     public void createClientTable() {
-        SimpleStatement createClients = SchemaBuilder.createTable(CqlIdentifier.fromCql(ClientSchema.CLIENTS))
+        SimpleStatement createClients = SchemaBuilder.createTable(CQLSchema.CLIENTS)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql(ClientSchema.PERSONAL_ID), DataTypes.TEXT)
-                .withClusteringColumn(CqlIdentifier.fromCql(ClientSchema.TYPE), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql(ClientSchema.FIRST_NAME), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql(ClientSchema.LAST_NAME), DataTypes.TEXT)
-                .withClusteringOrder(CqlIdentifier.fromCql(ClientSchema.TYPE), ClusteringOrder.ASC)
+                .withPartitionKey(CQLSchema.PERSONAL_ID, DataTypes.TEXT)
+                .withClusteringColumn(CQLSchema.TYPE, DataTypes.TEXT)
+                .withColumn(CQLSchema.FIRST_NAME, DataTypes.TEXT)
+                .withColumn(CQLSchema.LAST_NAME, DataTypes.TEXT)
+                .withClusteringOrder(CQLSchema.TYPE, ClusteringOrder.ASC)
                 .build();
         session.execute(createClients);
     }
 
     public void createVmTable() {
-        SimpleStatement createVms = SchemaBuilder.createTable(CqlIdentifier.fromCql(VmSchema.VMS))
+        SimpleStatement createVms = SchemaBuilder.createTable(CQLSchema.VMS)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql(VmSchema.ID), DataTypes.TEXT)
-                .withClusteringColumn(CqlIdentifier.fromCql(VmSchema.DISCRIMINATOR), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.IS_RENTED), DataTypes.BOOLEAN)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.RAM), DataTypes.INT)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.SOTRAGE), DataTypes.INT)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.RENTAL_PRICE), DataTypes.INT)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.CORES), DataTypes.INT)
-                .withColumn(CqlIdentifier.fromCql(VmSchema.SOCKETS), DataTypes.INT)
+                .withPartitionKey(CQLSchema.VM_ID, DataTypes.TEXT)
+                .withClusteringColumn(CQLSchema.DISCRIMINATOR, DataTypes.TEXT)
+                .withColumn(CQLSchema.IS_RENTED, DataTypes.BOOLEAN)
+                .withColumn(CQLSchema.RAM, DataTypes.INT)
+                .withColumn(CQLSchema.SOTRAGE, DataTypes.INT)
+                .withColumn(CQLSchema.RENTAL_PRICE, DataTypes.INT)
+                .withColumn(CQLSchema.CORES, DataTypes.INT)
+                .withColumn(CQLSchema.SOCKETS, DataTypes.INT)
                 .build();
 
         session.execute(createVms);
     }
 
     public void createRentTable() {
-        SimpleStatement createRentsByClient = SchemaBuilder.createTable(CqlIdentifier.fromCql("rents_by_client"))
+        SimpleStatement createRentsByClient = SchemaBuilder.createTable(CQLSchema.RENTS_BY_CLIENT)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql(ClientSchema.PERSONAL_ID), DataTypes.TEXT)
-                .withClusteringColumn(CqlIdentifier.fromCql("rent_id"), DataTypes.BIGINT)
-                .withColumn(CqlIdentifier.fromCql("vm_id"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("begin_time"), DataTypes.TIMESTAMP)
-                .withColumn(CqlIdentifier.fromCql("end_time"), DataTypes.TIMESTAMP) .withColumn(CqlIdentifier.fromCql("rent_cost"), DataTypes.DOUBLE)
+                .withPartitionKey(CQLSchema.PERSONAL_ID, DataTypes.TEXT)
+                .withClusteringColumn(CQLSchema.RENT_ID, DataTypes.TEXT)
+                .withColumn(CQLSchema.VM_ID, DataTypes.TEXT)
+                .withColumn(CQLSchema.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(CQLSchema.END_TIME, DataTypes.TIMESTAMP)
+                .withColumn(CQLSchema.RENT_COST, DataTypes.DOUBLE)
                 .build();
 
-        SimpleStatement createRentsByVm = SchemaBuilder.createTable (CqlIdentifier.fromCql("rents_by_vm"))
+        SimpleStatement createRentsByVm = SchemaBuilder.createTable(CQLSchema.RENTS_BY_VM)
                 .ifNotExists()
-                .withPartitionKey(CqlIdentifier.fromCql("vm_id"), DataTypes.TEXT)
-                .withClusteringColumn(CqlIdentifier.fromCql("rent_id"), DataTypes.BIGINT)
-                .withColumn(CqlIdentifier.fromCql("personal_id"), DataTypes.TEXT)
-                .withColumn(CqlIdentifier.fromCql("begin_time"), DataTypes.TIMESTAMP)
-                .withColumn(CqlIdentifier.fromCql("end_time"), DataTypes.TIMESTAMP)
-                .withColumn(CqlIdentifier.fromCql("rent_cost"), DataTypes.DOUBLE)
+                .withPartitionKey(CQLSchema.VM_ID, DataTypes.TEXT)
+                .withClusteringColumn(CQLSchema.RENT_ID, DataTypes.TEXT)
+                .withColumn(CQLSchema.PERSONAL_ID, DataTypes.TEXT)
+                .withColumn(CQLSchema.BEGIN_TIME, DataTypes.TIMESTAMP)
+                .withColumn(CQLSchema.END_TIME, DataTypes.TIMESTAMP)
+                .withColumn(CQLSchema.RENT_COST, DataTypes.DOUBLE)
                 .build();
 
         session.execute(createRentsByClient);

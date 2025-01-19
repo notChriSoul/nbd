@@ -16,6 +16,7 @@ class ClientDaoTest {
     static void setUp() {
         BaseRepository baseRepository = new BaseRepository();
         baseRepository.initSession();
+        baseRepository.createTables();
         CqlSession session = baseRepository.getSession();
         clientDao = new ClientMapperBuilder(session).build().clientDao();
     }
@@ -35,11 +36,14 @@ class ClientDaoTest {
 
     @Test
     void updateClient() {
-        Client client = clientDao.findClientById("2");
+        String id = "21";
+        Client client = new Client( id, "joe", "doe");
+        clientDao.create(client);
+        Client clientNew = clientDao.findClientById(id);
         String newName = "moe";
-        client.setFirstName(newName);
-        clientDao.update(client);
-        Client updatedClient = clientDao.findClientById("2");
+        clientNew.setFirstName(newName);
+        clientDao.update(clientNew);
+        Client updatedClient = clientDao.findClientById(id);
         System.out.println(updatedClient.getFirstName());
         Assertions.assertEquals(newName, updatedClient.getFirstName());
     }

@@ -2,14 +2,14 @@ package example.dao;
 
 import com.datastax.oss.driver.api.mapper.annotations.*;
 import example.model.Client;
-import example.schemas.ClientSchema;
+import example.schemas.SchemaConst;
 
 @Dao
 public interface ClientDao {
     @Insert
     void create(Client client);
 
-    @Query("SELECT * FROM " + ClientSchema.CLIENTS + " WHERE personal_id = :id")
+    @Query("SELECT * FROM " + SchemaConst.CLIENTS + " WHERE personal_id = :id")
     Client findClientById(String id);
 
     @Update(ifExists = true)

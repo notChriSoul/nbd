@@ -177,12 +177,12 @@ public class RentRepositoryTest {
     void testAddRentWithKafkaAndMongo() throws InterruptedException, JsonProcessingException {
 
         // Initialize KafkaConsumer
-        KafkaConsument consument = new KafkaConsument(1); // Jednego konsumenta dla prostoty
-        consument.initConsumers();
-        new Thread(consument::consumeTopicByAllConsumers).start();
+        //  KafkaConsument consument = new KafkaConsument(1); // Jednego konsumenta dla prostoty
+        //  consument.initConsumers();
+        // new Thread(consument::consumeTopicByAllConsumers).start();
 
         // Create and send Rent
-        Rent testRent = new Rent(1506, testClient, testVM, LocalDateTime.now());
+        Rent testRent = new Rent(1200, testClient, testVM, LocalDateTime.now());
         KafkaProducent.sendRentAsync(testRent);
 
         // Wait for the message to be processed

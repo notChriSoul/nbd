@@ -1,5 +1,6 @@
 package org.example.vms;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -8,6 +9,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Data
 @NoArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 @BsonDiscriminator(key = "_type", value = "performance")
 public class Performance extends VirtualMachine {
 

@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.example.vms.VirtualMachine;
 
 import java.time.Duration;
@@ -18,6 +21,11 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "@class"
+)
 public class Rent {
 
     @BsonId
@@ -48,10 +56,11 @@ public class Rent {
     private String nazwa = "nazwa";
 
     @BsonCreator
-    public Rent(@BsonProperty("id") int id,
-                @BsonProperty("client") Client client,
-                @BsonProperty("vm") VirtualMachine VM,
-                @BsonProperty("beginTime") LocalDateTime beginTime) {
+    @JsonCreator
+    public Rent(@BsonProperty("id") @JsonProperty("id")int id,
+                @BsonProperty("client") @JsonProperty("client") Client client,
+                @BsonProperty("vm") @JsonProperty("vm") VirtualMachine VM,
+                @BsonProperty("beginTime") @JsonProperty("beginTime") LocalDateTime beginTime) {
         this.id = id;
         this.client = client;
         this.VM = VM;

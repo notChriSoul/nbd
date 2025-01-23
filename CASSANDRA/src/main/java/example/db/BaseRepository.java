@@ -107,6 +107,25 @@ public class BaseRepository implements AutoCloseable {
         }
     }
 
+    public void dropCLients() {
+        SimpleStatement statement = SchemaBuilder.dropTable(CQLSchema.CLIENTS).ifExists().build();
+        session.execute(statement);
+    }
+
+    public void dropVM() {
+        SimpleStatement statement = SchemaBuilder.dropTable(CQLSchema.VMS).ifExists().build();
+        session.execute(statement);
+    }
+
+    public void dropAll() {
+        SimpleStatement statement1 = SchemaBuilder.dropTable(CQLSchema.RENTS_BY_CLIENT).ifExists().build();
+        session.execute(statement1);
+        SimpleStatement statement2 = SchemaBuilder.dropTable(CQLSchema.RENTS_BY_VM).ifExists().build();
+        session.execute(statement2);
+        dropCLients();
+//        dropVM();
+    }
+
     @Override
     public void close() {
         session.close();

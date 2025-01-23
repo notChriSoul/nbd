@@ -2,6 +2,7 @@ package example.provider;
 
 import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.datastax.oss.driver.api.mapper.MapperContext;
 import com.datastax.oss.driver.api.mapper.entity.EntityHelper;
@@ -11,7 +12,11 @@ import com.datastax.oss.driver.api.querybuilder.select.Select;
 import example.model.vms.Normal;
 import example.model.vms.Pro;
 import example.model.vms.VirtualMachine;
+import example.schemas.CQLSchema;
 import example.schemas.SchemaConst;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.datastax.oss.driver.api.querybuilder.QueryBuilder.literal;
 
@@ -60,6 +65,40 @@ public class vmGetByIdProvider {
         }        );
     }
 
+    public void update(VirtualMachine vm) {
+        session.execute(
+                switch (vm.getDiscriminator()) {
+                    case "Normal" -> {
+                        Normal normal = (Normal) vm;
+                        yield session.prepare(QueryBuilder.update(CQLSchema.VMS)
+                                .setColumn(CQLSchema.IS_RENTED, literal(vm.isRented()))
+                                .setColumn(CQLSchema.RAM, literal(vm.getRam()))
+                                .setColumn(CQLSchema.SOTRAGE, literal(vm.getStorage()))
+                                .setColumn(CQLSchema.RENTAL_PRICE, literal(vm.getRentalPrice()))
+                                .setColumn(CQLSchema.CORES, literal(((Normal) vm).getCores()))
+                                .where(Relation.column(CQLSchema.VM_ID).isEqualTo(literal(vm.getVmId())))
+                                .where(Relation.column(CQLSchema.DISCRIMINATOR).isEqualTo(literal(vm.getDiscriminator())))
+                                .build()).bind();
+                    }
+
+                    case "Pro" -> {
+                        Pro pro = (Pro) vm;
+                        yield session.prepare(QueryBuilder.update(CQLSchema.VMS)
+                                        .setColumn(CQLSchema.IS_RENTED, literal(vm.isRented()))
+                                        .setColumn(CQLSchema.RAM, literal(vm.getRam()))
+                                        .setColumn(CQLSchema.SOTRAGE, literal(vm.getStorage()))
+                                        .setColumn(CQLSchema.RENTAL_PRICE, literal(vm.getRentalPrice()))
+                                        .setColumn(CQLSchema.SOCKETS, literal(((Pro) vm).getSockets()))
+                                        .where(Relation.column(CQLSchema.VM_ID).isEqualTo(literal(vm.getVmId())))
+                                        .where(Relation.column(CQLSchema.DISCRIMINATOR).isEqualTo(literal(vm.getDiscriminator())))
+                                        .build()).bind();
+
+                    }
+
+                    default -> throw new IllegalStateException("Unexpected value: " + vm.getDiscriminator());
+                }        );
+    }
+
     public VirtualMachine findById(String id) {
         Select selectVm = QueryBuilder
                 .selectFrom(CqlIdentifier.fromCql(SchemaConst.VMS))
@@ -79,6 +118,21 @@ public class vmGetByIdProvider {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    public List<VirtualMachine> findAll() {
+        Select select = QueryBuilder.selectFrom(CQLSchema.VMS).all();
+        ResultSet resultSet = session.execute(select.build());
+        List<VirtualMachine> vms = new ArrayList<>();
+        for (Row row : resultSet) {
+            String discriminator = row.getString(CQLSchema.DISCRIMINATOR);
+            switch (discriminator) {
+                case "Normal" -> vms.add(getNormal(row));
+                case "Pro" -> vms.add(getPro(row));
+                default -> throw new IllegalStateException("Unexpected value: " + discriminator);
+            }
+        }
+        return vms;
     }
 
     private Normal getNormal(Row row) {

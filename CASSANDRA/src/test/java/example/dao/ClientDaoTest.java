@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import example.mapper.ClientMapperBuilder;
 import example.model.Client;
 import example.db.BaseRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,17 +22,28 @@ class ClientDaoTest {
         clientDao = new ClientMapperBuilder(session).build().clientDao();
     }
 
+    @AfterAll
+    static void tearDown() {
+        BaseRepository baseRepository = new BaseRepository();
+        baseRepository.dropCLients();
+        baseRepository.close();
+    }
+
     @Test
-    void test() {
+    void getClients() {
         Client client = new Client( "2", "joe", "doe");
         clientDao.create(client);
-
+        Client client2 = clientDao.findClientById(client.getPersonalId());
+        Assertions.assertEquals(client2.toString(), client.toString());
     }
 
     @Test
     void getClientById() {
-        Client client = clientDao.findClientById("2");
+        Client client2 = new Client( "12", "joe", "doe");
+        clientDao.create(client2);
+        Client client = clientDao.findClientById("12");
         System.out.println(client.getFirstName());
+        Assertions.assertEquals(client.getFirstName(), "joe");
     }
 
     @Test

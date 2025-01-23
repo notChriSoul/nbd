@@ -7,10 +7,7 @@ import org.example.Repositories.RentRepository;
 import org.example.Repositories.VirtualMachineRepository;
 import org.example.vms.Normal;
 import org.example.vms.VirtualMachine;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +49,17 @@ class KafkaProducentTest {
         // Insert sample Virtual Machine
         testVM = new Normal(1, 4, 16.0, 200.0);
         vmRepository.add(testVM);
+    }
+
+    @AfterAll
+    static void tearDown() {
+        rentRepository.getDatabase().getCollection("rents", Rent.class).deleteMany(new Document());
+        rentRepository.getDatabase().getCollection("archived", Rent.class).deleteMany(new Document());
+        rentRepository.close();
+        clientRepository.getDatabase().getCollection("clients", Client.class).deleteMany(new Document());
+        clientRepository.close();
+        vmRepository.getDatabase().getCollection("virtual_machines", VirtualMachine.class).deleteMany(new Document());
+        vmRepository.close();
     }
 
 

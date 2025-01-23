@@ -11,23 +11,23 @@ import java.util.List;
 
 @Dao
 public interface RentDao {
-    @StatementAttributes(consistencyLevel = "QUORUM")//todo sprawdzic czy to dobrze
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @QueryProvider(providerClass = RentProvider.class)
-    void create(Rent rent); //works
+    void create(Rent rent);
 
-    @StatementAttributes(consistencyLevel = "ONE", pageSize = 100)
+    @StatementAttributes(consistencyLevel = "ONE")
     @QueryProvider(providerClass = RentProvider.class)
     List<Rent> findAllByTable(CqlIdentifier table);
 
-    @StatementAttributes(consistencyLevel = "ONE", pageSize = 100)
+    @StatementAttributes(consistencyLevel = "ONE")
     @QueryProvider(providerClass = RentProvider.class)
-    List<Rent> findByClientId(String clientID); //works
+    List<Rent> findByClientId(String clientID);
 
-    @StatementAttributes(consistencyLevel = "ONE", pageSize = 100)
+    @StatementAttributes(consistencyLevel = "ONE")
     @QueryProvider(providerClass = RentProvider.class)
-    List<Rent> findByVMachineId(String vmID); //works
+    List<Rent> findByVMachineId(String vmID);
 
-    @StatementAttributes(consistencyLevel = "QUORUM", pageSize = 100)
+    @StatementAttributes(consistencyLevel = "QUORUM")
     @QueryProvider(providerClass = RentProvider.class)
-    void endRent(Rent rent); //works
+    void endRent(Rent rent);
 }

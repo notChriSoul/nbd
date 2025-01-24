@@ -19,8 +19,9 @@ import lombok.NoArgsConstructor;
 public class Rent {
     @Id
     @GeneratedValue
-    private String id;
-   private String name;
-   private String client;
-   private String vm;
+    private Long id;
+    private String name;
+    Rent(String name) {
+       this.name = name;
+   }
 }

@@ -77,13 +77,8 @@ public class KafkaConsument {
 
                 for (ConsumerRecord<Integer, String> record : records) {
                     try {
-//                        Rent rent = objectMapper.readValue(record.value(), Rent.class);
-//                        Object[] o = new Object[] {record.key(), record.value()};
-                        String id = JsonPath.parse(record.value()).read("$.id");
-                        String client = JsonPath.parse(record.value()).read("$.client.personalID");
-                        String vm = JsonPath.parse(record.value()).read("$.vm.id");
-                        String name = JsonPath.parse(record.value()).read("$.nazwa");
-                        Rent rent = new Rent(id, client, vm, name);
+
+                        Rent rent = new Rent(record.value().substring(28, 250));
                         rentRepository.save(rent);
                         System.out.println("Saved rent: " + rent.getId());
                     } catch (Exception e) {

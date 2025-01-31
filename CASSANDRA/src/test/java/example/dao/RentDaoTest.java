@@ -37,7 +37,7 @@ class RentDaoTest {
     @AfterAll
     static void tearDownAfterClass() {
         BaseRepository repo = new BaseRepository();
-        repo.dropAll();
+//        repo.dropAll();
         repo.close();
     }
 

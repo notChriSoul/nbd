@@ -25,7 +25,7 @@ class ClientDaoTest {
     @AfterAll
     static void tearDown() {
         BaseRepository baseRepository = new BaseRepository();
-        baseRepository.dropCLients();
+//        baseRepository.dropCLients();
         baseRepository.close();
     }
 
